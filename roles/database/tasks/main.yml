@@ -1,0 +1,8 @@
+---
+# tasks file for database
+    - name: Ping all cluster's hosts
+      ping:
+    #- name: Create Postgres Cluster
+    #  import_tasks: ./create_PG12cluster.yml
+    - name: Create new database Postgres
+      import_tasks: ./new_database.yml

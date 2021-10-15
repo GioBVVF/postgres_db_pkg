@@ -1,0 +1,40 @@
+repplication_user: repmgr
+replication_db: repmgr
+primary_host: 192.168.1.181
+mount_point_tbs : /pgsql_tsds/pgsql
+wal_level_value : replica
+network_segment: 192.168.0.0
+packages:
+  - name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    required: True
+  - name: postgresql12-server
+    required: True
+  - name:  postgresql12-contrib
+    required: True
+  - name:  repmgr12
+    required: True
+nodes:
+  - name: PG_master_1
+    node_id: 1
+    host_name: PG_master_1
+    conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
+    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    replication_slots: 'use_replication_slots=true'
+  - name: pg_slave_1
+    node_id: 2
+    host_name: pg_slave_1
+    conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
+    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    replication_slots: 'use_replication_slots=true'
+  - name: pg_slave_2
+    node_id: 3
+    host_name: pg_slave_2
+    conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
+    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    replication_slots: 'use_replication_slots=true'
+  - name: PG_witness
+    node_id: 4
+    host_name: PG_witness
+    conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
+    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    replication_slots: 'use_replication_slots=true'
