@@ -4,7 +4,7 @@
      name: psycopg2
      state: present
   -
-   name: Grant postgres users
+   name: Add postgres users to pg_hba.conf in local session trust
    postgresql_pg_hba:
      dest: '{{data_dir_postgres}}pg_hba.conf'
      contype: local
@@ -44,7 +44,7 @@
    become_user: postgres
    when: inventory_hostname in groups['pg_masters']
   -
-   name: Grant users {{new_database}}_owner and {{new_database}}_web access to databases {{new_database}} from ipv4 subnet_from_client using md5 authentication.
+   name: Add users {{new_database}}_owner and {{new_database}}_web access to databases {{new_database}} from ipv4 subnet_from_client using md5 authentication.
    postgresql_pg_hba:
      dest: '{{data_dir_postgres}}pg_hba.conf'
      contype: host
