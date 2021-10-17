@@ -1,17 +1,25 @@
+-
+  name: 'Creates new Postgres database'
+  hosts: all
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  vars:
+  vars_files:
+    - ./variables/database_par.yaml
+  tasks:
+  # -
+  #   yum:
+  #    name: epel-release
+  #    state: present
+  # -
+  #   name: pip3 install --upgrade
+  #   command: pip3 install --upgrade
   -
     name: Make sure psycopg2 is installed
     pip:
      name: psycopg2
      state: present
-  -
-   name: Add postgres users to pg_hba.conf in local session trust
-   postgresql_pg_hba:
-     dest: '{{data_dir_postgres}}pg_hba.conf'
-     contype: local
-     users: postgres
-     databases: all
-     method: trust
-   when: inventory_hostname in groups['pg_masters']
   -
     name: 'Create a new database with name {{new_database}}'
     postgresql_db: name={{new_database}}
@@ -44,7 +52,7 @@
    become_user: postgres
    when: inventory_hostname in groups['pg_masters']
   -
-   name: Add users {{new_database}}_owner and {{new_database}}_web access to databases {{new_database}} from ipv4 subnet_from_client using md5 authentication.
+   name: Grant users {{new_database}}_owner and {{new_database}}_web access to databases {{new_database}} from ipv4 subnet_from_client using md5 authentication.
    postgresql_pg_hba:
      dest: '{{data_dir_postgres}}pg_hba.conf'
      contype: host
