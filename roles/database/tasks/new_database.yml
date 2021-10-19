@@ -164,3 +164,8 @@
     role: '{{new_database}}_web'
     grant_option: no
    when: inventory_hostname in groups['pg_masters']
+  -
+   name: Simple select query to acme db
+   postgresql_query:
+    db: postgres
+    query: SELECT pg_reload_conf()

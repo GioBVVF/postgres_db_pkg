@@ -1,6 +1,6 @@
-new_database: giovanni
-postgres_version: 12
-data_dir_postgres: /var/lib/pgsql/12/data/
+new_database: barbato
+postgres_version: 13
+data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
 tbs_mount_dir: /pgsql_tsdata/tbs/
 default_tablespace: ts_{{new_database}}_data
 subnet_from_client:
