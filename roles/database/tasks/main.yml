@@ -4,5 +4,7 @@
       ping:
     #- name: Create Postgres Cluster
     #  import_tasks: ./create_PG12cluster.yml
-    - name: Create new database Postgres
-      import_tasks: ./new_database.yml
+    #- name: Create new database Postgres
+    #  import_tasks: ./new_database.yml
+    - name: Set parameter Postgres
+      import_tasks: ./set_parameters.yml

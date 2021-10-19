@@ -1,0 +1,9 @@
+- name: Set parameter
+  postgresql_set:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    db: postgres
+    port: 5432
+  register: set
+  when: item.required == True
+  loop: "{{ parameters }}"
