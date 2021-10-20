@@ -7,9 +7,9 @@
   vars:
   vars_files:
     #- ./variables/new_database_var.yml
-    - ./roles/database/vars/new_database_var.yml
+    #- ./roles/database/vars/new_database_var.yml
     - ./roles/database/vars/cluster_params.yml
-    - ./roles/database/vars/set_parameters_var.yml
+    #- ./roles/database/vars/set_parameters_var.yml
   #tasks:
    #- include: ./roles/database/tasks/new_database.yml
    #- include: ./tasks/new_database.yml

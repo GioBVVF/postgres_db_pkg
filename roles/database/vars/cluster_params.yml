@@ -1,6 +1,7 @@
 repplication_user: repmgr
 replication_db: repmgr
-postgres_version: 13
+postgres_version: 14
+#repmgr_version: 14
 data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
 primary_host: 192.168.1.181
 mount_point_tbs : /pgsql_tsds/pgsql
@@ -9,34 +10,34 @@ network_segment: 192.168.0.0
 packages:
   - name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
     required: True
-  - name: postgresql12-server
+  - name: 'postgresql{{postgres_version}}-server'
     required: True
-  - name:  postgresql12-contrib
+  - name:  'postgresql{{postgres_version}}-contrib'
     required: True
-  - name:  repmgr12
+  - name:  'repmgr_{{postgres_version}}'
     required: True
 nodes:
   - name: PG_master
     node_id: 1
     host_name: PG_master_1
     conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
-    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    data_directory: 'data_directory=''{{data_dir_postgres}}'''
     replication_slots: 'use_replication_slots=true'
   - name: PG_standby1
     node_id: 2
     host_name: pg_slave_1
     conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
-    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    data_directory: 'data_directory=''{{data_dir_postgres}}'''
     replication_slots: 'use_replication_slots=true'
   - name: PG_standby2
     node_id: 3
     host_name: pg_slave_2
     conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
-    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    data_directory: 'data_directory=''{{data_dir_postgres}}'''
     replication_slots: 'use_replication_slots=true'
   - name: PG_witness
     node_id: 4
     host_name: PG_witness
     conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
-    data_directory: 'data_directory=''/var/lib/pgsql/12/data'''
+    data_directory: 'data_directory=''{{data_dir_postgres}}'''
     replication_slots: 'use_replication_slots=true'

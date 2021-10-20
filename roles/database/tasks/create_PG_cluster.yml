@@ -1,42 +1,25 @@
-# -
-#   name: 'Create Postgres Cluster 12 install packages'
-#   hosts: all
-#   become: yes
-#   become_method: sudo
-#   gather_facts: yes
-#   vars:
-#   vars_files:
-#     - ./variables/cluster_params.yaml
-#   tasks:
   - name: install packages
     yum:
         name: '{{ item.name }}'
         state: present
         validate_certs: no
-    when: item.required == True
+    #when: item.required == True
+    when:
+      - item.required == True
+      - ansible_distribution|string == 'CentOS'
     loop: "{{ packages }}"
   -
-    name: 'systemctl enable postgresql-12'
-    command: systemctl enable postgresql-12
-# -
-#   name: 'Create Postgres Cluster 12 with repmgr - master ops'
-#   hosts: pg_masters PG_witness
-#   become: yes
-#   become_method: sudo
-#   gather_facts: yes
-#   vars:
-#   vars_files:
-#     - ./variables/cluster_params.yaml
-#   tasks:
+    name: 'systemctl enable postgresql-{{postgres_version}}'
+    command: systemctl enable postgresql-{{postgres_version}}
   -
     name: 'Execute a cmd initdb'
-    command: /usr/pgsql-12/bin/postgresql-12-setup initdb
+    command: /usr/pgsql-{{postgres_version}}/bin/postgresql-{{postgres_version}}-setup initdb
     become: yes
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   -
     name: 'Ensure the postgresql service is running'
     service:
-      name: postgresql-12
+      name: postgresql-{{postgres_version}}
       state: started
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   -
@@ -60,14 +43,14 @@
   -
     name: listen_addresses
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^#listen_addresses='
       insertafter: '^#listen_addresses'
       line: listen_addresses = '*'
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   - name: max_wal_senders = 10
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^max_wal_senders='
       insertafter: '^#max_wal_senders'
       line: max_wal_senders = 10
@@ -75,7 +58,7 @@
   -
     name: max_replication_slots = 10
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^#max_replication_slots='
       insertafter: '^#max_replication_slots'
       line: max_replication_slots = 10
@@ -83,7 +66,7 @@
   -
     name: wal_level = '{{wal_level_value}}'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^wal_level'
       insertafter: '^#wal_level'
       line:  wal_level = {{wal_level_value}}
@@ -91,7 +74,7 @@
   -
     name: hot_standby = on
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^hot_standby'
       insertafter: '^#hot_standby'
       line:  hot_standby = on
@@ -99,7 +82,7 @@
   -
     name: archive_mode = on
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^archive_mode'
       insertafter: '^#archive_mode'
       line:  archive_mode = on
@@ -107,7 +90,7 @@
   -
     name: archive_command = '/bin/true'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^archive_command'
       insertafter: '^#archive_command'
       line:  archive_command = '/bin/true'
@@ -115,7 +98,7 @@
   -
     name: shared_preload_libraries = 'repmgr'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/postgresql.conf
+      path: '{{data_dir_postgres}}postgresql.conf'
       #regexp: '^shared_preload_libraries'
       insertafter: '^#shared_preload_libraries'
       line: 'shared_preload_libraries = ''repmgr'''
@@ -123,49 +106,49 @@
   -
     name:  add {{repplication_user}} for local connections only
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/pg_hba.conf
+      path: '{{data_dir_postgres}}pg_hba.conf'
       #regexp: '^# "local" is for Unix domain socket connections only'
       insertafter: '^# "local" is for Unix domain socket connections only'
       line: 'local   {{replication_db}}          {{repplication_user}}                              trust'
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   - name:  'add {{repplication_user}} for host connections only on db {{replication_db}}'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/pg_hba.conf
+      path: '{{data_dir_postgres}}pg_hba.conf'
       #regexp: '^# "local" is for Unix domain socket connections only'
       insertafter: '^# IPv4 local connections:'
       line: 'host    {{replication_db}}          {{repplication_user}}      {{network_segment}}/16            trust'
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   - name:  'add {{repplication_user}} for localhost connections only on db {{replication_db}}'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/pg_hba.conf
+      path: '{{data_dir_postgres}}pg_hba.conf'
       #regexp: '^# "local" is for Unix domain socket connections only'
       insertafter: '^# IPv4 local connections:'
       line: 'host    {{replication_db}}          {{repplication_user}}      127.0.0.1/32            trust'
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   - name:  'add dba for connections only on cluster'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/pg_hba.conf
+      path: '{{data_dir_postgres}}pg_hba.conf'
       #regexp: '^# "local" is for Unix domain socket connections only'
       insertafter: '^# IPv4 local connections:'
       line: 'host    all         postgres      {{network_segment}}/16            md5'
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   - name:  'add {{repplication_user}} for local for replication'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/pg_hba.conf
+      path: '{{data_dir_postgres}}pg_hba.conf'
       #regexp: '^# "local" is for Unix domain socket connections only'
       insertafter: '^# replication privilege'
       line: 'host   replication     {{repplication_user}}    127.0.0.1/32                trust'
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   - name:  'add {{repplication_user}} for HOST for replication'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/pg_hba.conf
+      path: '{{data_dir_postgres}}pg_hba.conf'
       #regexp: '^# "local" is for Unix domain socket connections only'
       insertafter: '^# replication privilege'
       line: 'host   replication     {{repplication_user}}    {{network_segment}}/16             trust'
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
   - name:  'add {{repplication_user}} for replication'
     ansible.builtin.lineinfile:
-      path: /var/lib/pgsql/12/data/pg_hba.conf
+      path: '{{data_dir_postgres}}pg_hba.conf'
       #regexp: '^# "local" is for Unix domain socket connections only'
       insertafter: '^# replication privilege'
       line: 'local   replication     {{repplication_user}}                              trust'
@@ -173,7 +156,7 @@
   -
     name: 'restart postgresql to verify and reload all configuration'
     service:
-      name: postgresql-12
+      name: 'postgresql-{{postgres_version}}'
       state: restarted
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
 # -
@@ -187,41 +170,41 @@
 #     - ./variables/cluster_params.yaml
 #   tasks:
   -
-     name: 'Set node_id in /etc/repmgr/12/repmgr.conf'
+     name: 'Set node_id in /etc/repmgr/{{postgres_version}}/repmgr.conf'
      ansible.builtin.lineinfile:
-       path: /etc/repmgr/12/repmgr.conf
+       path: /etc/repmgr/{{postgres_version}}/repmgr.conf
        regexp: '^node_id='
        line: 'node_id={{item.node_id}}'
      when: inventory_hostname == item.host_name
      loop: "{{ nodes }}"
   -
-    name: 'set node_name in /etc/repmgr/12/repmgr.conf'
+    name: 'set node_name in /etc/repmgr/{{postgres_version}}/repmgr.conf'
     ansible.builtin.lineinfile:
-      path: /etc/repmgr/12/repmgr.conf
+      path: /etc/repmgr/{{postgres_version}}/repmgr.conf
       regexp: '^node_name='
       line: 'node_name=''{{item.name}}'''
     when: inventory_hostname == item.host_name
     loop: "{{ nodes }}"
   -
-    name: 'conninfo in /etc/repmgr/12/repmgr.conf'
+    name: 'conninfo in /etc/repmgr/{{postgres_version}}/repmgr.conf'
     ansible.builtin.lineinfile:
-        path: /etc/repmgr/12/repmgr.conf
+        path: /etc/repmgr/{{postgres_version}}/repmgr.conf
         regexp: '^conninfo='
         line:  '{{item.conninfo}}'
     when: inventory_hostname == item.host_name
     loop: "{{ nodes }}"
   -
-    name: data_directory='/var/lib/pgsql/12/data' in /etc/repmgr/12/repmgr.conf
+    name: data_directory='{{data_dir_postgres}}' in /etc/repmgr/{{postgres_version}}/repmgr.conf
     ansible.builtin.lineinfile:
-        path: /etc/repmgr/12/repmgr.conf
+        path: /etc/repmgr/{{postgres_version}}/repmgr.conf
         regexp: '^data_directory='
         line:  '{{ item.data_directory}}'
     when: inventory_hostname == item.host_name
     loop: "{{ nodes }}"
   -
-    name: use_replication_slots in /etc/repmgr/12/repmgr.conf
+    name: use_replication_slots in /etc/repmgr/{{postgres_version}}/repmgr.conf
     ansible.builtin.lineinfile:
-        path: /etc/repmgr/12/repmgr.conf
+        path: /etc/repmgr/{{postgres_version}}/repmgr.conf
         #regexp: '^#use_replication_slots='
         insertafter: '^#use_replication_slots='
         line:  '{{ item.replication_slots }}'
@@ -244,13 +227,13 @@
     #when: inventory_hostname not in groups['pg_witness']
   -
       name: 'primary register'
-      command: /usr/pgsql-12/bin/repmgr -f /etc/repmgr/12/repmgr.conf primary register
+      command: /usr/pgsql-{{postgres_version}}/bin/repmgr -f /etc/repmgr/{{postgres_version}}/repmgr.conf primary register
       become: yes
       become_user: postgres
       when: inventory_hostname in groups['pg_masters']
   -
       name: 'witness register'
-      command: /usr/pgsql-12/bin/repmgr -f /etc/repmgr/12/repmgr.conf witness register -h {{primary_host}}
+      command: /usr/pgsql-{{postgres_version}}/bin/repmgr -f /etc/repmgr/{{postgres_version}}/repmgr.conf witness register -h {{primary_host}}
       become: yes
       become_user: postgres
       when: inventory_hostname in groups['pg_witness_grp']
@@ -266,19 +249,19 @@
 #   tasks:
   -
       name: 'replica clone'
-      command: '/usr/pgsql-12/bin/repmgr -h {{primary_host}} -U repmgr -d repmgr -f /etc/repmgr/12/repmgr.conf standby clone -F'
+      command: '/usr/pgsql-{{postgres_version}}/bin/repmgr -h {{primary_host}} -U repmgr -d repmgr -f /etc/repmgr/{{postgres_version}}/repmgr.conf standby clone -F'
       become: yes
       become_user: postgres
       when: inventory_hostname in groups['pg_slaves']
   -
     name: 'restart postgresql to verify and reload all configuration on slaves nodes'
     service:
-      name: postgresql-12
+      name: postgresql-{{postgres_version}}
       state: restarted
     when: inventory_hostname in groups['pg_slaves']
   -
     name: 'replica register'
-    command: /usr/pgsql-12/bin/repmgr -f /etc/repmgr/12/repmgr.conf standby register
+    command: /usr/pgsql-{{postgres_version}}/bin/repmgr -f /etc/repmgr/{{postgres_version}}/repmgr.conf standby register
     become: yes
     become_user: postgres
     when: inventory_hostname in groups['pg_slaves']
