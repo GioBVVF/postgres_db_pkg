@@ -8,8 +8,8 @@ mount_point_tbs : /pgsql_tsds/pgsql
 wal_level_value : replica
 network_segment: 192.168.0.0
 packages:
-  - name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-    required: True
+  #- name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+  #  required: True
   - name: 'postgresql{{postgres_version}}-server'
     required: True
   - name:  'postgresql{{postgres_version}}-contrib'
