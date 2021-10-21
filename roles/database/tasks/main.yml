@@ -10,6 +10,8 @@
       debug: msg="{{ ansible_distribution_major_version }}"
     - name: Create Postgres Cluster
       import_tasks: ./create_PG_cluster.yml
+    #- name: Add new Replica Hot standBy to Postgres Cluster
+    #  import_tasks: ./add_replica_hotStandby.yml
     #- name: Create new database Postgres
     #  import_tasks: ./new_database.yml
     #- name: Set parameter Postgres

@@ -190,16 +190,6 @@
       name: 'postgresql-{{postgres_version}}'
       state: restarted
     when: ((inventory_hostname in groups['pg_masters']) or (inventory_hostname in groups['pg_witness_grp']))
-# -
-#   name: 'Create Postgres Cluster 12 with repmgr - all ops'
-#   hosts: all
-#   become: yes
-#   become_method: sudo
-#   gather_facts: yes
-#   vars:
-#   vars_files:
-#     - ./variables/cluster_params.yaml
-#   tasks:
   -
      name: 'Set node_id in /etc/repmgr/{{postgres_version}}/repmgr.conf'
      ansible.builtin.lineinfile:
@@ -268,16 +258,6 @@
       become: yes
       become_user: postgres
       when: inventory_hostname in groups['pg_witness_grp']
-# -
-#   name: 'Create Postgres Cluster 12 with repmgr - slaves ops'
-#   hosts: pg_slaves
-#   become: yes
-#   become_method: sudo
-#   gather_facts: yes
-#   vars:
-#   vars_files:
-#     - ./variables/cluster_params.yaml
-#   tasks:
   -
       name: 'replica clone'
       command: '/usr/pgsql-{{postgres_version}}/bin/repmgr -h {{primary_host}} -U repmgr -d repmgr -f /etc/repmgr/{{postgres_version}}/repmgr.conf standby clone -F'
@@ -292,7 +272,7 @@
     when: inventory_hostname in groups['pg_slaves']
   -
     name: 'replica register'
-    command: /usr/pgsql-{{postgres_version}}/bin/repmgr -f /etc/repmgr/{{postgres_version}}/repmgr.conf standby register
+    command: '/usr/pgsql-{{postgres_version}}/bin/repmgr -f /etc/repmgr/{{postgres_version}}/repmgr.conf standby register -F'
     become: yes
     become_user: postgres
     when: inventory_hostname in groups['pg_slaves']
