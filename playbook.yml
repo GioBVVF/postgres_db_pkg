@@ -6,8 +6,8 @@
   gather_facts: yes
   vars:
   vars_files:
-    #- ./roles/postgresTask4DBA/vars/new_database_var.yml
-    - ./roles/postgresTask4DBA/vars/cluster_params.yml
-    #- ./roles/postgresTask4DBA/vars/set_parameters_var.yml
+    - ./roles/postgresTask4DBA/vars/new_database_var.yml
+    #- ./roles/postgresTask4DBA/vars/cluster_params.yml
+    - ./roles/postgresTask4DBA/vars/set_parameters_var.yml
   roles:
-    - database
+    - postgresTask4DBA

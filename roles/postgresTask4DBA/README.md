@@ -19,7 +19,7 @@ A description of the settable variables for this role should go here, including 
 
 * \postgresTask4DBA\vars\cluster_params.yml :
 
-repplication_user: repmgr
+> repplication_user: repmgr
 replication_db: repmgr
 postgres_version: 14
 #repmgr_version: 14

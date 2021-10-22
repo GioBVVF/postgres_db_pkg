@@ -1,4 +1,4 @@
-new_database: barbato
+new_database: newdb
 postgres_version: 13
 data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
 tbs_mount_dir: /pgsql_tsdata/tbs/
