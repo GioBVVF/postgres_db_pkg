@@ -69,6 +69,52 @@ nodes: # Here are described cluster's node and variables that must be used for r
     replication_slots: 'use_replication_slots=true'
 ```
 
+* \postgresTask4DBA\vars\new_database_var.yml
+
+```
+new_database: newdatabase
+tbs_mount_dir: /pgsql_tsdata/tbs/ # If use tablespaces you can indicate here mounting point
+default_tablespace: ts_{{new_database}}_data
+subnet_from_client: # Network/Host can be enebled to connecto to bu User _web and _owner
+  - subnet: 192.168.0.0/16
+    required: True
+  - subnet: 172.10.10.10/32
+    required: false
+new_user_prefix: '{{new_database}}'
+pwd_owner: ceec4eif7ya # Password _owner
+pwd_web: ceec4eif7yb # Password _web
+#create_privileges: True
+tablespaces: # For new database you can create one tablespace for data and one for index
+  - name: ts_{{new_database}}_data
+    path: '{{tbs_mount_dir}}{{new_database}}_data'
+    required: True
+    owner: postgres
+    dati: True
+  - name: ts_{{new_database}}_idx
+    path: '{{tbs_mount_dir}}{{new_database}}_idx'
+    required: True
+    owner: postgres
+    dati: False
+
+```
+
+* \postgresTask4DBA\vars\set_parameters_var.yml
+
+If required is True setting will be changed
+
+```
+parameters:
+  - name: work_mem
+    required: True
+    value: 10MB
+  - name: log_min_duration_statement
+    required: True
+    value: -1
+  - name: log_connections
+    required: True
+    value: 'off'
+```
+
 Dependencies
 ------------
 
@@ -79,9 +125,11 @@ Example Playbook
 
 Including an example of how to use your role:
 
-sudo ansible-playbook playbook.yml -i inventory.ini --ask-become-pass # on all host in inventory
+Here command to be run:
 
-sudo ansible-playbook playbook.yml -i inventory.ini --limit pg_masters --ask-become-pass # only on master group
+> sudo ansible-playbook playbook.yml -i inventory.ini --ask-become-pass # on all host in inventory
+
+> sudo ansible-playbook playbook.yml -i inventory.ini --limit pg_masters --ask-become-pass # only on master group
 
 
 
