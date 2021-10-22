@@ -17,14 +17,20 @@ Role Variables
 
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
+* roles\postgresTask4DBA\defaults\main.yml
+
+```
+postgres_version: 13
+data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
+
+```
+
 * \postgresTask4DBA\vars\cluster_params.yml :
 
 ```
 repplication_user: repmgr      # replication user used for manage repmgr
 replication_db: repmgr         # replication db for repmgr
-postgres_version: 14
 #repmgr_version: 14
-data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/' # Postgres data directory on CentOS
 primary_host: 192.168.1.181 # Master cluster from hotstanby will be cloned
 mount_point_tbs : /pgsql_tsds/pgsql  # If use tablespaces you can indicate here mounting point
 wal_level_value : replica # Wal level must be replica in MAster-HotStanby configuration
@@ -73,7 +79,7 @@ Example Playbook
 
 Including an example of how to use your role:
 
-* /roles/postgresTask4DBA/tasks/main.yml : uncomment what tasks you want to run
+* /roles/postgresTask4DBA/tasks/main.yml : uncomment what tasks you want run
 
 ```
 # tasks file for database
@@ -106,7 +112,7 @@ Including an example of how to use your role:
   vars:
   vars_files:
     - ./roles/postgresTask4DBA/vars/new_database_var.yml
-    #- ./roles/postgresTask4DBA/vars/cluster_params.yml
+    - ./roles/postgresTask4DBA/vars/cluster_params.yml
     - ./roles/postgresTask4DBA/vars/set_parameters_var.yml
   roles:
     - postgresTask4DBA

@@ -1,2 +1,4 @@
 ---
-# defaults file for database
+
+postgres_version: 13
+data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
