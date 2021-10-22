@@ -16,7 +16,7 @@
     - postgresTask4DBA
   tasks:
     - mail:
-        to: gisaba1980@gmail.com
+        to: a@b.com
         subject: Task Ok
         body: OK OK OK
       ignore_errors: yes
