@@ -28,6 +28,7 @@ A description of the settable variables for this role should go here, including 
 ```
 postgres_version: 13
 data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
+mount_point_tbs : /pgsql_tsds/pgsql # If use tablespaces you can indicate here mounting point
 
 ```
 
@@ -38,7 +39,6 @@ repplication_user: repmgr      # replication user used for manage repmgr
 replication_db: repmgr         # replication db for repmgr
 #repmgr_version: 14
 primary_host: 192.168.1.181 # Master cluster from hotstanby will be cloned
-mount_point_tbs : /pgsql_tsds/pgsql  # If use tablespaces you can indicate here mounting point
 wal_level_value : replica # Wal level must be replica in MAster-HotStanby configuration
 network_segment: 192.168.0.0 # Network where cluster's nodes are installed
 packages: # Packages that must be installed
@@ -79,7 +79,6 @@ nodes: # Here are described cluster's node and variables that must be used for r
 
 ```
 new_database: newdatabase
-tbs_mount_dir: /pgsql_tsdata/tbs/ # If use tablespaces you can indicate here mounting point
 default_tablespace: ts_{{new_database}}_data
 subnet_from_client: # Network/Host can be enebled to connecto to bu User _web and _owner
   - subnet: 192.168.0.0/16
@@ -92,12 +91,12 @@ pwd_web: ceec4eif7yb # Password _web
 #create_privileges: True
 tablespaces: # For new database you can create one tablespace for data and one for index
   - name: ts_{{new_database}}_data
-    path: '{{tbs_mount_dir}}{{new_database}}_data'
+    path: '{{mount_point_tbs}}{{new_database}}_data'
     required: True
     owner: postgres
     dati: True
   - name: ts_{{new_database}}_idx
-    path: '{{tbs_mount_dir}}{{new_database}}_idx'
+    path: '{{mount_point_tbs}}{{new_database}}_idx'
     required: True
     owner: postgres
     dati: False
