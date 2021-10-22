@@ -2,7 +2,7 @@ repplication_user: repmgr
 replication_db: repmgr
 #repmgr_version: 14
 primary_host: 192.168.1.181
-mount_point_tbs : /pgsql_tsds/pgsql
+#mount_point_tbs : /pgsql_tsds/pgsql
 wal_level_value : replica
 network_segment: 192.168.0.0
 packages:
