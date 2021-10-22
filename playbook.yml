@@ -1,13 +1,22 @@
 -
   name: 'Postgres cluster database operation for DBA by Giovanni Barbato'
+  strategy: free
+  serial: 2
   hosts: all
+  any_errors_fatal: true
   become: yes
   become_method: sudo
   gather_facts: yes
   vars:
   vars_files:
     - ./roles/postgresTask4DBA/vars/new_database_var.yml
-    #- ./roles/postgresTask4DBA/vars/cluster_params.yml
+    - ./roles/postgresTask4DBA/vars/cluster_params.yml
     - ./roles/postgresTask4DBA/vars/set_parameters_var.yml
   roles:
     - postgresTask4DBA
+  tasks:
+    - mail:
+        to: a@b.it
+        subject: Task Ok
+        body: OK OK OK
+      ignore_errors: yes
