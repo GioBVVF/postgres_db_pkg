@@ -73,6 +73,7 @@ Example Playbook
 
 Including an example of how to use your role:
 
+```
 -
   name: 'Postgres cluster database operations for DBA by Giovanni Barbato'
   hosts: all
@@ -81,11 +82,12 @@ Including an example of how to use your role:
   gather_facts: yes
   vars:
   vars_files:
-    #- ./roles/postgresTask4DBA/vars/new_database_var.yml
-    - ./roles/postgresTask4DBA/vars/cluster_params.yml
-    #- ./roles/postgresTask4DBA/vars/set_parameters_var.yml
+    - ./roles/postgresTask4DBA/vars/new_database_var.yml
+    #- ./roles/postgresTask4DBA/vars/cluster_params.yml
+    - ./roles/postgresTask4DBA/vars/set_parameters_var.yml
   roles:
     - postgresTask4DBA
+```
 
 License
 -------
