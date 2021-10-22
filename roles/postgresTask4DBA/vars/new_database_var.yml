@@ -1,7 +1,4 @@
-new_database: barbato
-postgres_version: 13
-data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
-tbs_mount_dir: /pgsql_tsdata/tbs/
+new_database: new
 default_tablespace: ts_{{new_database}}_data
 subnet_from_client:
   - subnet: 192.168.0.0/16
@@ -14,12 +11,12 @@ pwd_web: ceec4eif7yb
 #create_privileges: True
 tablespaces:
   - name: ts_{{new_database}}_data
-    path: '{{tbs_mount_dir}}{{new_database}}_data'
+    path: '{{mount_point_tbs}}{{new_database}}_data'
     required: True
     owner: postgres
     dati: True
   - name: ts_{{new_database}}_idx
-    path: '{{tbs_mount_dir}}{{new_database}}_idx'
+    path: '{{mount_point_tbs}}{{new_database}}_idx'
     required: True
     owner: postgres
     dati: False
