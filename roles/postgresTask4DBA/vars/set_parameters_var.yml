@@ -1,7 +1,7 @@
 parameters:
   - name: work_mem
     required: True
-    value: 10MB
+    value: 16MB
   - name: log_min_duration_statement
     required: True
     value: -1

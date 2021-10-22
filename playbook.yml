@@ -1,9 +1,9 @@
 -
   name: 'Postgres cluster database operation for DBA by Giovanni Barbato'
-  strategy: free
-  serial: 2
+  #strategy: free
+  #serial: 4
   hosts: all
-  any_errors_fatal: true
+  #any_errors_fatal: true
   become: yes
   become_method: sudo
   gather_facts: yes
@@ -16,7 +16,7 @@
     - postgresTask4DBA
   tasks:
     - mail:
-        to: a@b.it
+        to: gisaba1980@gmail.com
         subject: Task Ok
         body: OK OK OK
       ignore_errors: yes

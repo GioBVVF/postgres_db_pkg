@@ -35,6 +35,8 @@
      owner: postgres
      location: "{{ item.path }}"
      state: present
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
    loop: "{{ tablespaces }}"
   -
@@ -52,6 +54,8 @@
      source: '{{ item.subnet }}'
      databases: '{{new_database}}'
      method: md5
+   become_user: postgres
+   become: yes
    when: item.required == True
    loop: "{{ subnet_from_client }}"
   -
@@ -62,6 +66,8 @@
      privs: CREATE
      objs: ALL_IN_SCHEMA
      role: PUBLIC
+    become_user: postgres
+    become: yes
     when: inventory_hostname in groups['pg_masters']
   -
    name: 'Connect to {{new_database}} database, create {{new_database}}_owner User'
@@ -69,6 +75,8 @@
     db: '{{new_database}}'
     name: '{{new_database}}_owner'
     password: '{{pwd_owner}}'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'grant usage on schema public to {{new_database}}_owner'
@@ -78,6 +86,8 @@
     objs: ALL_IN_SCHEMA
     privs: USAGE
     role: '{{new_database}}_owner'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'GRANT ALL PRIVILEGES ON SCHEMA public to {{new_database}}_owner;'
@@ -87,6 +97,8 @@
     type: schema
     objs: public
     role: '{{new_database}}_owner'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'GRANT all privileges on all tables IN SCHEMA public TO  {{new_database}}_owner'
@@ -97,6 +109,8 @@
     type: table
     objs: ALL_IN_SCHEMA
     role: '{{new_database}}_owner'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'grant create on database myNewDB to {{new_database}}_owner'
@@ -105,6 +119,8 @@
     privs: CREATE
     type: database
     role: '{{new_database}}_owner'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'Connect to {{new_database}} database, create {{new_database}}_web User'
@@ -113,6 +129,8 @@
     name: '{{new_database}}_web'
     password: '{{pwd_web}}'
     priv: ALL
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'grant usage on schema public to {{new_database}}_web'
@@ -122,6 +140,8 @@
     objs: ALL_IN_SCHEMA
     privs: USAGE
     role: '{{new_database}}_web'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'GRANT SELECT, update, delete, insert ON ALL TABLES IN SCHEMA public TO {{new_database}}_web'
@@ -131,6 +151,8 @@
     objs: ALL_IN_SCHEMA
     privs: SELECT,UPDATE,DELETE,INSERT
     role: '{{new_database}}_web'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to  {{new_database}}_web'
@@ -141,6 +163,8 @@
     objs: ALL_IN_SCHEMA
     privs: USAGE,SELECT
     role: '{{new_database}}_web'
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'ALTER DEFAULT PRIVILEGES in schema public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO {{new_database}}_web'
@@ -152,6 +176,8 @@
     type: default_privs
     role: '{{new_database}}_web'
     grant_option: no
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: 'ALTER DEFAULT PRIVILEGES in schema public GRANT USAGE, SELECT ON SEQUENCES to {{new_database}}_web'
@@ -163,9 +189,13 @@
     type: default_privs
     role: '{{new_database}}_web'
     grant_option: no
+   become_user: postgres
+   become: yes
    when: inventory_hostname in groups['pg_masters']
   -
    name: Reload Configuration by SELECT pg_reload_conf()
    postgresql_query:
     db: postgres
     query: SELECT pg_reload_conf()
+   become_user: postgres
+   become: yes

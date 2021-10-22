@@ -5,5 +5,7 @@
     db: postgres
     port: 5432
   register: set
+  become_user: postgres
+  become: yes
   when: item.required == True
   loop: "{{ parameters }}"
