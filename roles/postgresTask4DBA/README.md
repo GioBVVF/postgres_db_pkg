@@ -6,7 +6,7 @@ This roles provides many tasks for activities on cluster database postgresql. It
 Requirements
 ------------
 
-This role requires Ansible 2.4+
+This role requires Ansible 2.9+
 
 
 Description
