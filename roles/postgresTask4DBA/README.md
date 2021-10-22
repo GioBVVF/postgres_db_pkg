@@ -20,23 +20,23 @@ A description of the settable variables for this role should go here, including 
 * \postgresTask4DBA\vars\cluster_params.yml :
 
 ```
-repplication_user: repmgr
-replication_db: repmgr
+repplication_user: repmgr      # replication user used for manage repmgr
+replication_db: repmgr         # replication db for repmgr
 postgres_version: 14
 #repmgr_version: 14
-data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
-primary_host: 192.168.1.181
-mount_point_tbs : /pgsql_tsds/pgsql
-wal_level_value : replica
-network_segment: 192.168.0.0
-packages:
+data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/' # Postgres data directory on CentOS
+primary_host: 192.168.1.181 # Master cluster from hotstanby will be cloned
+mount_point_tbs : /pgsql_tsds/pgsql  # If use tablespaces you can indicate here mounting point
+wal_level_value : replica # Wal level must be replica in MAster-HotStanby configuration
+network_segment: 192.168.0.0 # Network where cluster's nodes are installed
+packages: # Packages that must be installed
   - name: 'postgresql{{postgres_version}}-server'
     required: True
   - name:  'postgresql{{postgres_version}}-contrib'
     required: True
   - name:  'repmgr_{{postgres_version}}'
     required: True
-nodes:
+nodes: # Here describe cluster's node and variables that must be used for repmgr configuration
   - name: PG_master
     node_id: 1
     host_name: PG_master_1
