@@ -79,7 +79,13 @@ Example Playbook
 
 Including an example of how to use your role:
 
-* /roles/postgresTask4DBA/tasks/main.yml : uncomment what tasks you want run
+sudo ansible-playbook playbook.yml -i inventory.ini --ask-become-pass # on all host in inventory
+
+sudo ansible-playbook playbook.yml -i inventory.ini --limit pg_masters --ask-become-pass # only on master group
+
+
+
+* /roles/postgresTask4DBA/tasks/main.yml : uncomment tasks that you want execute
 
 ```
 # tasks file for database
