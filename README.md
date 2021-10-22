@@ -14,7 +14,7 @@ All tasks use  [**privilege escalation**](https://docs.ansible.com/ansible/lates
 
 * **set_parameters.yml** : Set all parameters included in **roles\database\vars\set_parameters_var.yml** file where **required: True**. Setting is   registered in postgresql.auto.conf
 
-For more details about use of role see [postgresTask4DBA](roles/README.md)
+For more details about use of role see [postgresTask4DBA](roles/postgresTask4DBA/README.md)
 
 License
 -------
