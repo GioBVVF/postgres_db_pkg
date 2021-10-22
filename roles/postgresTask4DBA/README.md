@@ -36,7 +36,7 @@ packages: # Packages that must be installed
     required: True
   - name:  'repmgr_{{postgres_version}}'
     required: True
-nodes: # Here describe cluster's node and variables that must be used for repmgr configuration
+nodes: # Here are described cluster's node and variables that must be used for repmgr configuration
   - name: PG_master
     node_id: 1
     host_name: PG_master_1
@@ -73,6 +73,29 @@ Example Playbook
 
 Including an example of how to use your role:
 
+* /roles/postgresTask4DBA/tasks/main.yml : uncomment what tasks you want to run
+
+```
+# tasks file for database
+# Some task for all hosts
+    - name: Ping all cluster's hosts
+      ping:
+    - name: Distribution
+      debug: msg="{{ ansible_distribution }}"
+    - name: Distribution version
+      debug: msg="{{ ansible_distribution_version}}"
+    - name: Distribution major version
+      debug: msg="{{ ansible_distribution_major_version }}"
+# Specific Tasks
+    #- name: Create Postgres Cluster
+    #  import_tasks: ./create_PG_cluster.yml
+    - name: Create new database Postgres
+      import_tasks: ./new_database.yml
+    - name: Set parameter Postgres
+      import_tasks: ./set_parameters.yml
+```
+
+* playbook.yml
 ```
 -
   name: 'Postgres cluster database operations for DBA by Giovanni Barbato'
