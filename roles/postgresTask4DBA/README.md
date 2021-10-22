@@ -19,7 +19,8 @@ A description of the settable variables for this role should go here, including 
 
 * \postgresTask4DBA\vars\cluster_params.yml :
 
-> repplication_user: repmgr
+```
+repplication_user: repmgr
 replication_db: repmgr
 postgres_version: 14
 #repmgr_version: 14
@@ -60,6 +61,7 @@ nodes:
     conninfo: 'conninfo=''host={{ansible_host}} user={{repplication_user}} dbname={{replication_db}} connect_timeout=2'''
     data_directory: 'data_directory=''{{data_dir_postgres}}'''
     replication_slots: 'use_replication_slots=true'
+```
 
 Dependencies
 ------------
