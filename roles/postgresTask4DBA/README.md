@@ -28,7 +28,7 @@ A description of the settable variables for this role should go here, including 
 ```
 postgres_version: 13
 data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
-mount_point_tbs : /pgsql_tsds/pgsql # If use tablespaces you can indicate here mounting point
+mount_point_tbs : /pgsql_tsds/pgsql/ # If use tablespaces you can indicate here mounting point
 
 ```
 

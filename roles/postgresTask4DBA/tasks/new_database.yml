@@ -165,7 +165,7 @@
     grant_option: no
    when: inventory_hostname in groups['pg_masters']
   -
-   name: Simple select query to acme db
+   name: Reload Configuration by SELECT pg_reload_conf()
    postgresql_query:
     db: postgres
     query: SELECT pg_reload_conf()
