@@ -23,6 +23,6 @@
         password: mysecret
         to: Giovanni <xxx.xxx@gmail.com>
         subject: Ansible-report
-        body: System {{ ansible_hostname }} has been successfully provisioned.
+        body: System {{ ansible_hostname | upper }} has been successfully provisioned.
       delegate_to: localhost
-      ignore_errors: yes     
+      ignore_errors: yes
