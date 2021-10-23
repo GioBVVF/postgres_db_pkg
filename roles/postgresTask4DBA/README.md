@@ -163,8 +163,11 @@ Here command to be run:
 * playbook.yml
 ```
 -
-  name: 'Postgres cluster database operations for DBA by Giovanni Barbato'
+  name: 'Postgres cluster database operation for DBA by Giovanni Barbato'
+  #strategy: free
+  #serial: 4
   hosts: all
+  #any_errors_fatal: true
   become: yes
   become_method: sudo
   gather_facts: yes
@@ -175,6 +178,19 @@ Here command to be run:
     - ./roles/postgresTask4DBA/vars/set_parameters_var.yml
   roles:
     - postgresTask4DBA
+  tasks:
+    - name: Sending an e-mail using Gmail SMTP servers
+      community.general.mail:
+        host: smtp.gmail.com
+        port: 587
+        username: username@gmail.com
+        password: mysecret
+        to: Giovanni <xxx.xxx@gmail.com>
+        subject: Ansible-report
+        body: System {{ ansible_hostname }} has been successfully provisioned.
+      delegate_to: localhost
+      ignore_errors: yes     
+
 ```
 
 License
