@@ -1,4 +1,4 @@
-new_database: new_database
+new_database: newdb
 default_tablespace: ts_{{new_database}}_data
 subnet_from_client:
   - subnet: 192.168.0.0/16

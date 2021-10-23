@@ -10,8 +10,8 @@
     - name: Distribution major version
       debug: msg="{{ ansible_distribution_major_version }}"
 # Specific Tasks
-    #- name: Create Postgres Cluster
-    #  import_tasks: ./create_PG_cluster.yml
+    # - name: Create Postgres Cluster
+    #   import_tasks: ./create_PG_cluster.yml
     - name: Create new database Postgres
       import_tasks: ./new_database.yml
     - name: Set parameter Postgres
