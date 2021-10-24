@@ -6,7 +6,7 @@ This code provides many tasks for activities on cluster database postgresql. It 
 
 ### Tasks
 
-All tasks use  [**privilege escalation**](https://docs.ansible.com/ansible/latest/user_guide/become.html) so you must use --ask-become-pass parameter. To run a single task uncomment this in /roles/database/tasks/main.yml and comment others and in  playbook.yml file use relative variable file in /roles/database/vars/ directory.
+All tasks use  [**privilege escalation**](https://docs.ansible.com/ansible/latest/user_guide/become.html) so in this case you must use --ask-become-pass parameter or if you need to set **ansible_ssh_pass** in host_vars you could be use ansible-vault to encrypt file wich password is stored and decrypt by --ask-vault-pass or use password file [**ansible-vault**](https://docs.ansible.com/ansible/2.9/user_guide/vault.html).  To run a single task uncomment this in /roles/database/tasks/main.yml and comment others and in  playbook.yml file use relative variable file in /roles/database/vars/ directory.
 
 * **new_database.yml** : Create a new database on a cluster and provide to set up also users to manage him. One user <new_db_name>_web for application and <new_db_name>_owner to administration. This playbook uses **psycopg2** pip module so it needs **ansible_python_interpreter: "/usr/bin/python3** in eache file into **postgres_db_pkg\group_vars** directory. Operating System supported: **Linux CentOS**. ASAP i'll try to add also Ubuntu distribution.
 
