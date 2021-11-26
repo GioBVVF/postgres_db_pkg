@@ -3,7 +3,7 @@
   #strategy: free
   #serial: 4
   hosts: all
-  #any_errors_fatal: true
+  any_errors_fatal: true
   become: yes
   become_method: sudo
   gather_facts: yes
@@ -14,15 +14,15 @@
     - ./roles/postgresTask4DBA/vars/set_parameters_var.yml
   roles:
     - postgresTask4DBA
-  tasks:
-    - name: Sending an e-mail using Gmail SMTP servers
-      mail:
-        host: smtp.gmail.com
-        port: 587
-        username: username@gmail.com
-        password: mysecret
-        to: Giovanni <xxx.xxx@gmail.com>
-        subject: Ansible-report
-        body: System {{ ansible_hostname | upper }} has been successfully provisioned.
-      delegate_to: localhost
-      ignore_errors: yes
+  # tasks:
+  #   - name: Sending an e-mail using Gmail SMTP servers
+  #     mail:
+  #       host: smtp.gmail.com
+  #       port: 587
+  #       username: username@gmail.com
+  #       password: mysecret
+  #       to: Giovanni <xxx.xxx@gmail.com>
+  #       subject: Ansible-report
+  #       body: System {{ ansible_hostname | upper }} has been successfully provisioned.
+  #     delegate_to: localhost
+  #     ignore_errors: yes

@@ -2,3 +2,8 @@
 postgres_version: 14
 data_dir_postgres: '/var/lib/pgsql/{{postgres_version}}/data/'
 mount_point_tbs : /pgsql_tsds/pgsql/ # If use tablespaces you can indicate here mounting point
+#ansible_python_interpreter: "/usr/bin/python3"
+ansible_python_interpreter: "/usr/bin/python2"
+#ansible_python_interpreter: "/usr/bin/python3"
+#ansible_python_interpreter: "/usr/bin/env python"
+#ansible_python_interpreter: "/usr/libexec/platform-python"
